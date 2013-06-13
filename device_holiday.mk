@@ -30,13 +30,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     gps.holiday
 
-# Bluetooth
+# Bluetooth and WiFi
 $(call inherit-product, device/htc/msm8660-common/bcm_hcd.mk)
 
-# Wifi
-$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
-PRODUCT_PACKAGES += \
-    hostapd.conf
+$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
 
 # HTC BT audio config
 PRODUCT_COPY_FILES += device/htc/holiday/dsp/AudioBTID.csv:system/etc/AudioBTID.csv
@@ -139,6 +136,7 @@ PRODUCT_COPY_FILES += \
     device/htc/holiday/firmware/a225p5_pm4.fw:system/etc/firmware/a225p5_pm4.fw \
     device/htc/holiday/firmware/yamato_pfp.fw:system/etc/firmware/yamato_pfp.fw \
     device/htc/holiday/firmware/yamato_pm4.fw:system/etc/firmware/yamato_pm4.fw
+
 # call the proprietary setup
 $(call inherit-product-if-exists, vendor/htc/holiday/holiday-vendor.mk)
 

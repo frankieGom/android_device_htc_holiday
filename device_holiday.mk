@@ -132,6 +132,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.lockprof.threshold=500 \
     dalvik.vm.dexopt-flags=m=y
 
+# Adreno Drivers
+PRODUCT_COPY_FILES += \
+    device/htc/holiday/firmware/a225_pfp.fw:system/etc/firmware/a225_pfp.fw \
+    device/htc/holiday/firmware/a225_pm4.fw:system/etc/firmware/a225_pm4.fw \
+    device/htc/holiday/firmware/a225p5_pm4.fw:system/etc/firmware/a225p5_pm4.fw \
+    device/htc/holiday/firmware/yamato_pfp.fw:system/etc/firmware/yamato_pfp.fw \
+    device/htc/holiday/firmware/yamato_pm4.fw:system/etc/firmware/yamato_pm4.fw
 # call the proprietary setup
 $(call inherit-product-if-exists, vendor/htc/holiday/holiday-vendor.mk)
 

@@ -12,8 +12,10 @@ on early-init
     symlink /storage/sdcard1 /external_sd
     symlink /storage/sdcard1 /mnt/external_sd
 
-    export EXTERNAL_STORAGE /storage/sdcard1
+    export EXTERNAL_STORAGE /storage/sdcard0
+    export SECONDARY_STORAGE /storage/sdcard1
 
+on emmc-fs
     mkdir /devlog 0700 root root
 
     # msm8660: firmware
@@ -26,13 +28,7 @@ on early-init
     mkdir /vendor/firmware/misc_mdm 0771 system system
 
     # mount the whole thing
-    # mount_all fstab.holiday
-
-    wait /dev/block/mmcblk0p17
-    wait /dev/block/mmcblk0p21
-    mount vfat /dev/block/mmcblk0p17 /vendor/firmware/misc ro shortname=lower
-    mount vfat /dev/block/mmcblk0p21 /vendor/firmware/adsp ro shortname=lower
-    mount vfat /dev/block/mmcblk0p18 /vendor/firmware/misc_mdm ro shortname=lower
+    mount_all fstab.holiday
 
     chown radio diag /dev/block/mmcblk0p16
     chmod 0460 /dev/block/mmcblk0p16
@@ -69,15 +65,14 @@ on early-init
     symlink /vendor/firmware/misc_mdm/image/amss.mbn /vendor/firmware/amss.mbn
     symlink /vendor/firmware/misc_mdm/image/htcssmem.mbn /vendor/firmware/htcssmem.mbn
 
-    # Force loading of modem and Q6 images
-    # uncomment if nessasary: write /dev/smd_pkt_loopback 1
-
-on init
-    mkdir /devlog 0700 root root
-
-on fs
-    mount_all /fstab.holiday
-    setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
+    # Bluetooth Permissions
+    chown bluetooth bluetooth /dev/ttyHS0
+    chmod 0660 /dev/ttyHS0
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /sys/module/htc_bdaddress/parameters/bdaddress
+    setprop ro.bt.bdaddr_path /sys/module/htc_bdaddress/parameters/bdaddress
 
     # Wifi Firmware
     symlink /system/vendor/firmware/bcm4330.hcd /vendor/firmware/bcm4330.hcd
@@ -85,13 +80,6 @@ on fs
     symlink /system/vendor/firmware/fw_bcmdhd.bin /vendor/firmware/fw_bcmdhd.bin
     symlink /system/vendor/firmware/fw_bcmdhd_apsta.bin /vendor/firmware/fw_bcmdhd_apsta.bin
     symlink /system/vendor/firmware/fw_bcmdhd_p2p.bin /vendor/firmware/fw_bcmdhd_p2p.bin
-
-    # TEMP HACK to fix BT firmware symlink issue
-    symlink /system/vendor/lib /vendor/lib
-
-    # audio effects symlink
-    symlink /system/vendor/etc/audio_effects.conf /vendor/etc/audio_effects.conf
-    symlink /system/vendor/etc/audio_policy.conf /vendor/etc/audio_policy.conf
 
 on post-fs-data
     # double check the perms and set owner
@@ -101,22 +89,9 @@ on post-fs-data
     # Set indication that we have finished previous actions
     setprop vold.post_fs_done 1
 
-on boot
-
     wait /dev/ttyHSL1
-    mount debugfs /sys/kernel/debug /sys/kernel/debug
     mkdir /data/qcks 0770 system system
     exec /system/bin/logwrapper /system/bin/htc_ext4_fsck
-
-    # Chown polling nodes as needed from UI running on system server
-    chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
-    chmod 0664 /sys/devices/platform/msm_sdcc.2/polling
-    chmod 0664 /sys/devices/platform/msm_sdcc.3/polling
-    chmod 0664 /sys/devices/platform/msm_sdcc.4/polling
-    chown system system /sys/devices/platform/msm_sdcc.1/polling
-    chown system system /sys/devices/platform/msm_sdcc.2/polling
-    chown system system /sys/devices/platform/msm_sdcc.3/polling
-    chown system system /sys/devices/platform/msm_sdcc.4/polling
 
     mkdir /data/radio 0770 radio radio
     chown radio system /sys/module/smd_rpcrouter/parameters/debug_mask
@@ -133,14 +108,9 @@ on boot
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
     chown dhcp dhcp /data/misc/dhcp
 
-   # mkdir /data/d 0777 system system
-   # mount debugfs /data/d /data/d
+    mkdir /data/d 0777 system system
+    mount debugfs /data/d /data/d
 
-    # audio
-    mkdir /data/audio 2770 media audio
-
-    # radio
-    mkdir /data/radio 2770 radio radio
 
     # liblights
     chown system system /sys/class/leds/green/brightness
@@ -209,7 +179,6 @@ on boot
 
     chown system system /sys/devices/platform/panel_3d/3D_mode
     chmod 0664 /sys/devices/platform/panel_3d/3D_mode
-
     # for Optical sensors
     chown system system /sys/class/optical_sensors/lightsensor/ls_adc
     chown system system /sys/class/optical_sensors/lightsensor/ls_auto
@@ -220,7 +189,7 @@ on boot
     chown system system /sys/class/optical_sensors/proximity/ps_test_mode
 
     # Set SUID bit for iproute2 ip tool
-   # chmod 4755 /system/bin/ip
+    chmod 4755 /system/bin/ip
 
     # port-bridge
     chmod 0660 /dev/smd0
@@ -238,7 +207,7 @@ on boot
     chown system system /dev/mpuirq
     chown system system /dev/timerirq
 
-   # symlink /mnt/sdcard/ext_sd /sdcard2
+    symlink /mnt/sdcard/ext_sd /sdcard2
 
     # Overwrite framework low memory killer setting
    # write /sys/module/lowmemorykiller/parameters/minfree 2048,3072,4096,6144,8192,12288
@@ -257,9 +226,33 @@ on boot
     chmod 0660 /dev/diag_arm9
     chmod 0660 /dev/btdiag
 
-    # sync fs
-    chown system /sys/devices/platform/rs300000a7.65536/force_sync
-    chown system /sys/devices/platform/rs300000a7.65536/sync_sts
+    # allow interfaces to get v6 address when tethering is enabled
+    write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
+
+    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.wifi    524288,1048576,2097152,262144,524288,1048576
+    setprop net.tcp.buffersize.hsdpa   4096,174760,1572864,4096,16384,110208
+    setprop net.tcp.buffersize.umts    4096,174760,1572864,4096,16384,110208
+    setprop net.tcp.buffersize.edge    4096,174760,1572864,4096,16384,35040
+    setprop net.tcp.buffersize.gprs    4096,174760,1572864,4096,8760,11680
+    setprop net.tcp.buffersize.lte     4096,221184,3461120,4096,221184,3461120
+    setprop net.tcp.buffersize.evdo_b  4094,87380,262144,4096,16384,262144
+    setprop net.tcp.buffersize.wimax   4096,221184,524288,4096,16384,110208
 
 # Services start here
 
@@ -268,6 +261,11 @@ on boot
 #     disabled
 #     oneshot
 
+# bugreport is triggered by the KEY_VOL-UP and KEY_VOL-DOWN keycodes
+service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
+    disabled
+    oneshot
+    keycodes 114 115
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
     class main
@@ -379,11 +377,6 @@ service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0 -c /data/mis
     disabled
     oneshot
 
-service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
-    class main
-    user root
-    disabled
-
 service zchgd_offmode /system/bin/zchgd -pseudooffmode
     class main
     user root
@@ -395,12 +388,21 @@ service zchgd_onmode /system/bin/zchgd -onmode
     oneshot
 
 on property:init.svc.bootanim=stopped
-    start qcom-post-boot
+    start mpdecision
+
+on property:ro.emmc=1
+    start rmt_storage
+
+on property:ro.use_data_netmgrd=false
+    stop netmgrd
+
+on property:service.modem.enable=1
+    start modem
+
+on property:service.modem.enable=0
+    stop modem
 
 on property:service.adb.root=1
     write /sys/class/android_usb/android0/enable 0
     restart adbd
     write /sys/class/android_usb/android0/enable 1
-
-on property:sys.radio.shutdown=true
-    exec /system/bin/sh /system/etc/init.qcom.efs.sync.sh

@@ -11,12 +11,6 @@
 /dev/genlock            0666    root        root
 /dev/graphics/*         0660    root        graphics
 
-# camera
-/dev/gemini0            0660    system      camera
-/dev/msm_camera/*       0660    system      camera
-/dev/pmem_smipool*      0660    system      camera
-/dev/pmem_camera*       0660    system      camera
-
 # the msm hw3d client device node is world writable/readable.
 /dev/msm_hw3dc          0666    root        root
 
@@ -204,10 +198,3 @@
 
 # permissions for sensors
 /dev/msm_dsps             0660  system       system
-/dev/rtc0               0600    system      system
-
-# wifi
-/dev/rfkill             0660    root        wifi
-
-# simlock
-/dev/simlock            0660    radio       radio

@@ -36,7 +36,7 @@ BOARD_PAGE_SIZE := 2048
 BOARD_KERNEL_CMDLINE := console=ttyHSL0 androidboot.hardware=holiday no_console_suspend=1
 
 # Kernel [Build]
-TARGET_KERNEL_CONFIG := holiday_defconfig
+TARGET_KERNEL_CONFIG := sultan_defconfig
 BUILD_KERNEL := true
 
 # Use libril in the device tree

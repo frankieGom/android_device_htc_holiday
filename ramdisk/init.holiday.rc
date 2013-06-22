@@ -29,14 +29,6 @@ on emmc-fs
     mkdir /vendor/firmware/adsp     0771 system system
     mkdir /vendor/firmware/misc_mdm 0771 system system
 
-    wait /dev/block/platform/msm_sdcc.1/by-num/p17
-    wait /dev/block/platform/msm_sdcc.1/by-num/p21
-    wait /dev/block/platform/msm_sdcc.1/by-num/p18
-
-    mount vfat /dev/block/platform/msm_sdcc.1/by-num/p17 /vendor/firmware/misc ro shortname=lower
-    mount vfat /dev/block/platform/msm_sdcc.1/by-num/p21 /vendor/firmware/adsp ro shortname=lower
-    mount vfat /dev/block/platform/msm_sdcc.1/by-num/p18 /vendor/firmware/misc_mdm ro shortname=lower
-
     # mount the whole thing
     mount_all fstab.holiday
 

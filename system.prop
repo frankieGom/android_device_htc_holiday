@@ -104,7 +104,7 @@ ro.phone_fat = 1
 
 # UMS
 persist.sys.usb.config=mass_storage,adb
-ro.vold.umsdirtyratio=40
+ro.vold.umsdirtyratio=50
 
 # Make rmt_storage start at init
 ro.emmc = 1

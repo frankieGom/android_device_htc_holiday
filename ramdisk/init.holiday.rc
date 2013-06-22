@@ -320,10 +320,10 @@ service modem /system/xbin/wireless_modem
     group system radio
     disabled
 
-#service mpdecision /system/bin/mpdecision --Nw 5.4 --Ts 350 --no_sleep --avg_comp --single_core_while_panel_off
-#    class main
-#    user root
-#    disabled
+service mpdecision /system/bin/mpdecision --Nw 5.4 --Ts 350 --no_sleep --avg_comp --single_core_while_panel_off
+    class main
+    user root
+    disabled
 
 service mpld /system/bin/mpld
     class main

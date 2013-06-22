@@ -40,7 +40,8 @@ TARGET_KERNEL_CONFIG := holiday_defconfig
 BUILD_KERNEL := true
 
 # Use libril in the device tree
-BOARD_PROVIDES_LIBRIL := true
+#BOARD_PROVIDES_LIBRIL := true
+BOARD_USES_LEGACY_RIL := true
 
 # Touchscreen
 BOARD_USE_LEGACY_TOUCHSCREEN := true

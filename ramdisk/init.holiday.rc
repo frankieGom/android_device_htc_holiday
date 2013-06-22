@@ -380,6 +380,11 @@ service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0 -c /data/mis
     disabled
     oneshot
 
+service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
+    class main
+    user root
+    disabled
+
 service zchgd_offmode /system/bin/zchgd -pseudooffmode
     class main
     user root

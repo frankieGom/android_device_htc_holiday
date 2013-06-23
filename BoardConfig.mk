@@ -43,7 +43,7 @@ BUILD_KERNEL := true
 BOARD_USE_NEW_LIBRIL_HTC := true
 BOARD_USES_LEGACY_RIL := true
 # Use libril in the device tree
-BOARD_PROVIDES_LIBRIL := true
+#BOARD_PROVIDES_LIBRIL := true
 
 # GPS
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := holiday

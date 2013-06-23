@@ -12,7 +12,7 @@ on early-init
     symlink /storage/sdcard1 /external_sd
     symlink /storage/sdcard1 /mnt/external_sd
     symlink /storage/usbdisk /usbdisk
-    symlink /storage/usbisk  /mnt/usbdisk
+    symlink /storage/usbdisk /mnt/usbdisk
 
     export EXTERNAL_STORAGE /storage/sdcard0
     export SECONDARY_STORAGE /storage/sdcard1

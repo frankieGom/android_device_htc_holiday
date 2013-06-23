@@ -30,12 +30,13 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     gps.holiday
 
+## The gps config appropriate for this device
+PRODUCT_COPY_FILES += device/common/gps/gps.conf_US:system/etc/gps.conf
+
 # Bluetooth
 $(call inherit-product, device/htc/msm8660-common/bcm_hcd.mk)
 
 # Wifi
-$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
-
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4329/device-bcm.mk)
 
 # HTC BT audio config

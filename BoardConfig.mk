@@ -34,8 +34,14 @@ TARGET_BOOTLOADER_BOARD_NAME := holiday
 BOARD_KERNEL_BASE := 0x48000000
 BOARD_PAGE_SIZE := 2048
 BOARD_KERNEL_CMDLINE := console=ttyHSL0 androidboot.hardware=holiday no_console_suspend=1
-TARGET_KERNEL_CONFIG := holiday_defconfig
 
+# Kernel [Build]
+TARGET_KERNEL_CONFIG := holiday_defconfig
+BUILD_KERNEL := true
+
+# ril
+BOARD_USE_NEW_LIBRIL_HTC := true
+BOARD_USES_LEGACY_RIL := true
 # Use libril in the device tree
 BOARD_PROVIDES_LIBRIL := true
 

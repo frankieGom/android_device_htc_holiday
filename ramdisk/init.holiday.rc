@@ -94,7 +94,7 @@ on post-fs-data
     # Set indication that we have finished previous actions
     setprop vold.post_fs_done 1
 
-    wait /dev/ttyHSL1
+    #wait /dev/ttyHSL1
     mkdir /data/qcks 0770 system system
     exec /system/bin/logwrapper /system/bin/htc_ext4_fsck
 
@@ -211,7 +211,7 @@ on post-fs-data
     chown system system /dev/mpuirq
     chown system system /dev/timerirq
 
-    symlink /mnt/sdcard/ext_sd /sdcard2
+    #symlink /mnt/sdcard/ext_sd /sdcard2
 
     # Overwrite framework low memory killer setting
     write /sys/module/lowmemorykiller/parameters/minfree 2048,3072,4096,6144,8192,12288
@@ -286,20 +286,20 @@ service dmagent /system/bin/dmagent -N
     user root
     group radio cache inet misc
 
-service hciattach /system/bin/brcm_patchram_plus --enable_hci --no2bytes \
-        --tosleep 50000 --baudrate 3000000 --use_baudrate_for_download \
-        --patchram /system/vendor/firmware/bcm4330.hcd \
-        --scopcm=0,0,0,0,0,0,0,3,3,0 /dev/ttyHS0
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
+#service hciattach /system/bin/brcm_patchram_plus --enable_hci --no2bytes \
+#        --tosleep 50000 --baudrate 3000000 --use_baudrate_for_download \
+#        --patchram /system/vendor/firmware/bcm4330.hcd \
+#        --scopcm=0,0,0,0,0,0,0,3,3,0 /dev/ttyHS0
+#    class main
+#    user bluetooth
+#    group bluetooth net_bt_admin
+#    disabled
+#    oneshot
 
-service hostapd_bin /system/bin/hostapd -d /data/misc/wifi/hostapd.conf
-    socket wpa_wlan0 dgram 660 wifi wifi
-    oneshot
-    disabled
+#service hostapd_bin /system/bin/hostapd -d /data/misc/wifi/hostapd.conf
+#    socket wpa_wlan0 dgram 660 wifi wifi
+#    oneshot
+#    disabled
 
 service htcbatt /system/bin/htcbatt
     class main
@@ -337,20 +337,20 @@ service mpld /system/bin/mpld
 service netmgrd /system/bin/netmgrd
     class main
 
-service netsharing_on /system/bin/netsharing net on
-    class main
-    disabled
-    oneshot
+#service netsharing_on /system/bin/netsharing net on
+#    class main
+#    disabled
+#    oneshot
 
-service netsharing_off /system/bin/netsharing net off
-    class main
-    disabled
-    oneshot
+#service netsharing_off /system/bin/netsharing net off
+#    class main
+#    disabled
+#    oneshot
 
-service netsharing_pass /system/bin/netsharing net_pass on
-    class main
-    disabled
-    oneshot
+#service netsharing_pass /system/bin/netsharing net_pass on
+#    class main
+#    disabled
+#    oneshot
 
 service qmuxd /system/bin/qmuxd
     class main
